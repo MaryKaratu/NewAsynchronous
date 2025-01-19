@@ -330,38 +330,48 @@ wait(2)
 
 //challenge
 
-const imgContainer = document.querySelector('.images');
+// const imgContainer = document.querySelector('.images');
 
-const createImage = function (imgPath) {
-  return new Promise(function (resolve, reject) {
-    const img = document.createElement('img');
-    img.src = imgPath;
+// const createImage = function (imgPath) {
+//   return new Promise(function (resolve, reject) {
+//     const img = document.createElement('img');
+//     img.src = imgPath;
 
-    img.addEventListener('load', () => imgContainer.append(img));
-    resolve(img);
-  });
+//     img.addEventListener('load', () => imgContainer.append(img));
+//     resolve(img);
+//   });
 
-  img.addEventListener('error', function () {
-    reject(img);
-  });
+//   img.addEventListener('error', function () {
+//     reject(img);
+//   });
+// };
+
+// let currentImg;
+
+// createImage('img/img-1.jpg')
+//   .then(img => {
+//     currentImg = img;
+//     console.log('image 1 loaded');
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//     return createImage('img/img-2.jpg');
+//   })
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 2 loa ded');
+//     return wait(2);
+//   })
+//   .then(() => (currentImg.style.display = 'none'))
+//   .catch(err => console.log('There was an error'));
+
+/////////////////////////////
+//consuming promise with async/await
+const whereAmI = async function (country) {
+  const res = await fetch('https://restcountries.com/v3.1/name/${country}');
+  console.log(res);
 };
 
-let currentImg;
-
-createImage('img/img-1.jpg')
-  .then(img => {
-    currentImg = img;
-    console.log('image 1 loaded');
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = 'none';
-    return createImage('img/img-2.jpg');
-  })
-  .then(img => {
-    currentImg = img;
-    console.log('Image 2 loaded');
-    return wait(2);
-  })
-  .then(() => (currentImg.style.display = 'none'))
-  .catch(err => console.log('There was an error'));
+whereAmI('portugal');
+console.log('First');
