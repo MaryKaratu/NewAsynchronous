@@ -448,7 +448,7 @@ const get3Countries = async function (c1, c2, c3) {
       getJSON(`https://restcountries.com/v3.1/name/${c3}`),
     ]);
 
-    console.log(data.map(d => d[0].capital));
+    console.log(data.map(d => d.capital));
   } catch (err) {
     console.error(err);
   }
