@@ -126,12 +126,12 @@ const renderError = function (msg) {
 //     });
 //   });
 // };
-// const getJSON = function (url, errMsg = 'Something went wrong') {
-//   return fetch(url).then(response => {
-//     if (!response.ok) throw new Error(`${errMsg} ${response.status}`);
-//     return response.json();
-//   });
-// };
+const getJSON = function (url, errMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errMsg} ${response.status}`);
+    return response.json();
+  });
+};
 
 //simplified
 // const getCountryData = function (country) {
@@ -262,17 +262,17 @@ const renderError = function (msg) {
 // lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 
 // //Promisifyinf SetTimeout
-const wait = function (second) {
-  return new Promise(resolve => {
-    setTimeout(resolve, second * 1000);
-  });
-};
-wait(2)
-  .then(() => {
-    console.log('I waited for 2 seconds');
-    return wait(1);
-  })
-  .then(() => console.log('I waited for 1 seconds'));
+// const wait = function (second) {
+//   return new Promise(resolve => {
+//     setTimeout(resolve, second * 1000);
+//   });
+// };
+// wait(2)
+//   .then(() => {
+//     console.log('I waited for 2 seconds');
+//     return wait(1);
+//   })
+//   .then(() => console.log('I waited for 1 seconds'));
 
 // Promise.resolve('abc').then(x => console.log(x));
 // Promise.reject(new Error('problem')).catch(x => console.log(x));
@@ -367,11 +367,91 @@ wait(2)
 //   .catch(err => console.log('There was an error'));
 
 /////////////////////////////
-//consuming promise with async/await
-const whereAmI = async function (country) {
-  const res = await fetch('https://restcountries.com/v3.1/name/${country}');
-  console.log(res);
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// };
+// //consuming promise with async/await
+// const whereAmI = async function () {
+//   try {
+//     // fetch('https://restcountries.com/v3.1/name/${country}').then(res =>
+//     //   console.log(res)
+//     // );
+//     //Geolocation
+//     const pos = await getPosition();
+//     const { latitude: lat, longitude: lng } = pos.coords;
+
+//     //Reversed geocoding
+//     const resGeo = await fetch(
+//       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+//     );
+//     if (!resGeo) throw new Error('Problem getting location data');
+
+//     const dataGeo = await resGeo.json();
+
+//     //Country Data
+//     const res = await fetch(
+//       `https://restcountries.com/v3.1/name/${dataGeo.address.country}`
+//     );
+//     if (!res) throw new Error('Problem getting country');
+
+//     const data = await res.json();
+//     renderCountry(...data);
+
+//     return `You are in ${dataGeo.city}, ${dataGeo.address.country}`;
+//   } catch (err) {
+//     renderError(`Something went wrong ${err.message}`);
+
+//     //Reject promise return from asyn function
+//     throw err;
+//   }
+// };
+
+// // whereAmI()
+// //   .then(city => console.log(city))
+// //   .catch(err => console.error(`${err.message} 🌋`))
+// //   .finally(() => console.log('finish gettng location'));
+// // console.log('First');
+
+// // try {
+// //   let y = 1;
+// //   const x = 2;
+// //   x = 3;
+// // } catch (err) {
+// //   alert(err.message);
+// // }
+
+// (async function () {
+//   try {
+//     const city = await whereAmI();
+//     console.log(city);
+//   } catch (err) {
+//     console.err(`${err.message}`);
+//   }
+//   console.log(`Finished getting location`);
+// })();
+
+////////////////
+//Running Promises in Parallel
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    // console.log(data1);
+    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+    //console.log([...data1.capital, ...data2.capital, ...data3.capital]);
+
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
+
+    console.log(data.map(d => d[0].capital));
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-whereAmI('portugal');
-console.log('First');
+get3Countries('portugal', 'canada', 'tanzania');
