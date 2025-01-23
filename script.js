@@ -128,6 +128,7 @@ const renderError = function (msg) {
 //     });
 //   });
 // };
+
 const getJSON = function (url, errMsg = 'Something went wrong') {
   return fetch(url).then(response => {
     if (!response.ok) throw new Error(`${errMsg} ${response.status}`);
@@ -474,7 +475,7 @@ const timeout = function (sec) {
   return new Promise(function (_, reject) {
     setTimeout(function () {
       reject(new Error(`Request took too long`));
-    }, (sec = 1000));
+    }, sec * 1000);
   });
 };
 
